@@ -1,0 +1,10 @@
+secretKey: 28c8edde3d61a0411511d3b1866f0636
+
+username: username_mongo_werewolf
+password: 4wI7vMclPmimZLvP
+host: cluster0.e9qiv.mongodb.net
+port: 8080
+databaseName: DefaultDatabase
+
+apiBaseURL: /api
+identifier: 2

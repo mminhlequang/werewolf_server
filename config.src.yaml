@@ -1,0 +1,10 @@
+secretKey: key jwt
+
+username: username
+password: pass
+host: mongodb.net
+port: 8080
+databaseName: DefaultDatabase
+
+apiBaseURL: /api
+identifier: 2

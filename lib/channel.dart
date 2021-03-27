@@ -30,6 +30,8 @@ class WerewolfServerChannel extends ApplicationChannel {
           ResponseConstant.reponseSuccess(AppJWT.verify(accessToken)));
     });
 
+    router.route("/getConfig").link(() => ConfigController());
+
     router.route("/signIn").link(() => AccountController());
 
     return router;

@@ -11,6 +11,8 @@ abstract class EntityBase extends Serializable {
 
   int get id => _id ?? DateTime.now().microsecondsSinceEpoch;
 
+  Future view();
+
   Future insert();
 
   Future update();

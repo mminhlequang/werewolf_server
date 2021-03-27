@@ -26,6 +26,9 @@ class User extends EntityBase {
       : super(id: id) {
     this.password = password;
   }
+  @override
+  Future view() async{
+  }
 
   @override
   Future insert() {

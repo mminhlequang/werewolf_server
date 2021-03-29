@@ -8,6 +8,7 @@ export 'dart:convert';
 export 'dart:developer';
 export 'dart:io';
 
+export 'package:crypto/crypto.dart';
 export 'package:aqueduct/aqueduct.dart';
 export 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 export 'package:mongo_dart/mongo_dart.dart';

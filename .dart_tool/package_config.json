@@ -467,10 +467,10 @@
       "name": "werewolf_server",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-03-24T07:27:37.316343Z",
+  "generated": "2021-03-28T16:22:25.181003Z",
   "generator": "pub",
   "generatorVersion": "2.10.4"
 }

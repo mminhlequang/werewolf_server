@@ -24,11 +24,19 @@ class User extends EntityBase {
       String password,
       int id})
       : super(id: id) {
-    this.password = password;
+    this.password = convertPassword(password);
   }
+
+  static String convertPassword(String _pass) {
+    final key = utf8.encode('p@ssw0rd');
+    final bytes = utf8.encode(_pass);
+
+    final hmacSha256 = Hmac(sha256, key); // HMAC-SHA256
+    return hmacSha256.convert(bytes).toString();
+  }
+
   @override
-  Future view() async{
-  }
+  Future view() async {}
 
   @override
   Future insert() {
@@ -59,6 +67,7 @@ class User extends EntityBase {
       "email": email,
       "avatar": avatar,
       "username": username,
+      "password": password,
       "score": score,
       "coin": coin
     };
@@ -71,6 +80,7 @@ class User extends EntityBase {
     email = object['email'] as String;
     avatar = object['avatar'] as String;
     username = object['username'] as String;
+    password = object['password'] as String;
     score = object['score'] as int;
     coin = object['coin'] as int;
   }

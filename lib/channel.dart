@@ -32,7 +32,9 @@ class WerewolfServerChannel extends ApplicationChannel {
 
     router.route("/getConfig").link(() => ConfigController());
 
-    router.route("/signIn").link(() => AccountController());
+    router.route("/post/signUp").link(() => SignUpController());
+
+    router.route("/post/signIn").link(() => SignInController());
 
     return router;
   }

@@ -2,9 +2,9 @@ import '../werewolf_server.dart';
 
 enum JWTType { success, expired, error }
 
-class JWTResponse<T> {
+class JWTResponse {
   final JWTType type;
-  final T data;
+  final User data;
   const JWTResponse({this.data, this.type});
 }
 
@@ -20,30 +20,23 @@ class AppJWT {
   static bool isValid(String accessToken) =>
       verify(accessToken).type == JWTType.success;
 
-  static String generator<T>(T data) {
+  static String generator(Map data) {
     // Create a json web token
-    final jwt = JWT(
-      {
-        'id': 123,
-        'server': {
-          'id': '3e4fc296',
-          'loc': 'euw-2',
-        }
-      },
-      issuer: 'https://github.com/jonasroussel/jsonwebtoken',
-    );
+    final jwt = JWT({'user': data});
 
     // Sign it (default with HS256 algorithm)
     return jwt.sign(SecretKey(_secretKey),
         expiresIn: Duration(days: _expiredsInDay));
   }
 
-  static JWTResponse<T> verify<T>(String token) {
+  static JWTResponse verify(String token) {
     JWTType type;
-    T data;
+    User data = User();
     try {
       final jwt = JWT.verify(token, SecretKey(_secretKey));
       print('Payload: ${jwt.payload}');
+      data.readFromMap(
+          jsonDecode(jsonEncode(jwt.payload)) as Map<String, dynamic>);
       type = JWTType.success;
     } on JWTExpiredError {
       type = JWTType.expired;

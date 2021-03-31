@@ -28,6 +28,7 @@ class User extends EntityBase {
   }
 
   static String convertPassword(String _pass) {
+    if (_pass == null) return "";
     final key = utf8.encode('p@ssw0rd');
     final bytes = utf8.encode(_pass);
 

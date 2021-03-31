@@ -13,7 +13,10 @@ class WereWolfConfiguration extends Configuration {
   String apiBaseURL;
 
   @optionalConfiguration
-  int port;
+  int portSocket;
+
+  @optionalConfiguration
+  int portWebservice;
 
   @optionalConfiguration
   int identifier;

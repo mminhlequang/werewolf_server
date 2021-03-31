@@ -7,7 +7,7 @@ abstract class EntityBase extends Serializable {
     _id = id;
   }
 
-  set id(int id) => _id;
+  set id(int id) => _id = id;
 
   int get id => _id ?? DateTime.now().microsecondsSinceEpoch;
 

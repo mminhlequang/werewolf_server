@@ -6,6 +6,8 @@ class JWTResponse {
   final JWTType type;
   final User data;
   const JWTResponse({this.data, this.type});
+
+  bool get isSuccess => type == JWTType.success;
 }
 
 class AppJWT {
@@ -20,9 +22,9 @@ class AppJWT {
   static bool isValid(String accessToken) =>
       verify(accessToken).type == JWTType.success;
 
-  static String generator(Map data) {
+  static String generator(User user) {
     // Create a json web token
-    final jwt = JWT({'user': data});
+    final jwt = JWT({'user': user?.asMap()});
 
     // Sign it (default with HS256 algorithm)
     return jwt.sign(SecretKey(_secretKey),
@@ -33,10 +35,11 @@ class AppJWT {
     JWTType type;
     User data = User();
     try {
-      final jwt = JWT.verify(token, SecretKey(_secretKey));
+      final jwt = JWT.verify(token.trim(), SecretKey(_secretKey));
       print('Payload: ${jwt.payload}');
-      data.readFromMap(
-          jsonDecode(jsonEncode(jwt.payload)) as Map<String, dynamic>);
+      Map<String, dynamic> payload =
+          jsonDecode(jsonEncode(jwt.payload)) as Map<String, dynamic>;
+      data.readFromMap(payload['user'] as Map<String, dynamic>);
       type = JWTType.success;
     } on JWTExpiredError {
       type = JWTType.expired;

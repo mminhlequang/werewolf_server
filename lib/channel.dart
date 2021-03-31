@@ -21,13 +21,14 @@ class WerewolfServerChannel extends ApplicationChannel {
         Router(notFoundHandler: notFoundHandler, basePath: config.apiBaseURL);
 
     router.route("/token/generator").linkFunction((request) async {
-      return Response.ok(ResponseConstant.reponseSuccess(AppJWT.generator({})));
+      return Response.ok(ResponseConstant.reponseSuccess(
+          AppJWT.generator(User(fullName: "Minh Minh"))));
     });
 
     router.route("/token/verify").linkFunction((request) async {
       final accessToken = request.raw.headers.value("Authorization");
-      return Response.ok(
-          ResponseConstant.reponseSuccess(AppJWT.verify(accessToken)));
+      return Response.ok(ResponseConstant.reponseSuccess(
+          AppJWT.verify(accessToken).data?.asMap()));
     });
 
     router.route("/getConfig").link(() => ConfigController());

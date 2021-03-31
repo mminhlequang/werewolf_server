@@ -36,7 +36,7 @@ class SignUpController extends Controller {
           email: email,
           fullName: "Wolf member");
       await user.insert();
-      final accessToken = AppJWT.generator(user.asMap());
+      final accessToken = AppJWT.generator(user);
       return Response.ok(ResponseConstant.reponseSuccess(
           {"user": user.asMap(), "accessToken": accessToken}));
     } catch (e) {

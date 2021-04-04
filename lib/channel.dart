@@ -21,15 +21,17 @@ class WerewolfServerChannel extends ApplicationChannel {
         Router(notFoundHandler: notFoundHandler, basePath: config.apiBaseURL);
 
     router.route("/token/generator").linkFunction((request) async {
-      return Response.ok(ResponseConstant.reponseSuccess(
+      return Response.ok(ResponseConstant.responseSuccess(
           AppJWT.generator(User(fullName: "Minh Minh"))));
     });
 
     router.route("/token/verify").linkFunction((request) async {
       final accessToken = request.raw.headers.value("Authorization");
-      return Response.ok(ResponseConstant.reponseSuccess(
-          AppJWT.verify(accessToken).data?.asMap()));
+      return Response.ok(ResponseConstant.responseSuccess(
+          AppJWT.verify(accessToken).data?.toJson()));
     });
+
+    router.route("/migrate").link(() => MigrateController());
 
     router.route("/getConfig").link(() => ConfigController());
 
@@ -44,7 +46,7 @@ class WerewolfServerChannel extends ApplicationChannel {
     final response = Response.notFound();
     if (req.acceptsContentType(ContentType.html)) {
       response
-        ..body = ResponseConstant.reponseNotFound()
+        ..body = ResponseConstant.responseNotFound()
         ..contentType = ContentType.json;
     }
 

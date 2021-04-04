@@ -1,6 +1,6 @@
 import '../werewolf_server.dart';
 
-abstract class EntityBase extends Serializable {
+abstract class EntityBase extends Equatable {
   int _id;
 
   EntityBase({int id}) {
@@ -17,5 +17,9 @@ abstract class EntityBase extends Serializable {
 
   Future update();
 
-  Future detete();
+  Future delete();
+
+  EntityBase fromJson(Map<String, dynamic> json);
+
+  Map<String, dynamic> toJson();
 }

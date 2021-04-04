@@ -14,9 +14,9 @@ class UserController extends ResourceController {
   @Operation.get()
   Future<Response> getProfile() async {
     if (AppJWT.isValid(accessToken))
-      return Response.ok(ResponseConstant.reponseSuccess({"OK": true}));
+      return Response.ok(ResponseConstant.responseSuccess({"OK": true}));
     else
-      return Response.forbidden(body: ResponseConstant.reponseForbidden());
+      return Response.forbidden(body: ResponseConstant.responseForbidden());
   }
 
   @Operation.post()
@@ -29,9 +29,9 @@ class UserController extends ResourceController {
           email: "mminh@gmail.com",
           fullName: "Minh Minh");
       await user.insert();
-      return Response.ok(ResponseConstant.reponseSuccess({"OK": true}));
+      return Response.ok(ResponseConstant.responseSuccess({"OK": true}));
     } catch (e) {
-      return Response.ok(ResponseConstant.reponseError());
+      return Response.ok(ResponseConstant.responseError());
     }
   }
 
@@ -45,10 +45,10 @@ class UserController extends ResourceController {
           email: "mminh@gmaail.com",
           fullName: "Minh Minh1");
       await user.update();
-      return Response.ok(ResponseConstant.reponseSuccess({"OK": true}));
+      return Response.ok(ResponseConstant.responseSuccess({"OK": true}));
     } catch (e) {
       return Response.ok(
-          ResponseConstant.reponseError(msg: e.toString(), translate: false));
+          ResponseConstant.responseError(msg: e.toString(), translate: false));
     }
   }
 }

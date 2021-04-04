@@ -27,6 +27,8 @@ class User extends EntityBase {
     this.password = convertPassword(password);
   }
 
+  final DbCollection _db = AppDatabase.colUser;
+
   static String convertPassword(String _pass) {
     if (_pass == null) return "";
     final key = utf8.encode('p@ssw0rd');
@@ -41,27 +43,45 @@ class User extends EntityBase {
 
   @override
   Future insert() {
-    return AppDatabase.colUser.insert(asMap());
+    return _db.insert(toJson());
   }
 
   @override
   Future update() async {
-    final data = await AppDatabase.colUser.findOne({"id": id});
-    asMap().forEach((key, value) {
+    final data = await _db.findOne({"id": id});
+    toJson().forEach((key, value) {
       if (value != null) {
         data.update(key, (_) => value);
       }
     });
-    return AppDatabase.colUser.update({"id": id}, data);
+    return _db.update({"id": id}, data);
   }
 
   @override
-  Future detete() {
-    return AppDatabase.colUser.remove(where.eq('id', id));
+  Future delete() {
+    return _db.remove(where.eq('id', id));
   }
 
   @override
-  Map<String, dynamic> asMap() {
+  EntityBase fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'] as int,
+      fullName: json['fullName'] as String,
+      email: json['email'] as String,
+      avatar: json['avatar'] as String,
+      username: json['username'] as String,
+      password: json['password'] as String,
+      score: json['score'] as int,
+      coin: json['coin'] as int,
+    );
+  }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "fullName": fullName,
@@ -72,17 +92,5 @@ class User extends EntityBase {
       "score": score,
       "coin": coin
     };
-  }
-
-  @override
-  void readFromMap(Map<String, dynamic> object) {
-    id = object['id'] as int;
-    fullName = object['fullName'] as String;
-    email = object['email'] as String;
-    avatar = object['avatar'] as String;
-    username = object['username'] as String;
-    password = object['password'] as String;
-    score = object['score'] as int;
-    coin = object['coin'] as int;
   }
 }

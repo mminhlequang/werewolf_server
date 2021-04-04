@@ -29,27 +29,48 @@ class Config extends EntityBase {
       int id})
       : super(id: id);
 
+  final DbCollection _db = AppDatabase.colConfig;
+
   @override
   Future view() async {
-    final data = await AppDatabase.colConfig.findOne({"id": id});
+    final data = await _db.findOne({"id": id});
     print(data);
     return data;
   }
 
   @override
   Future insert() {
-    return AppDatabase.colConfig.insert(asMap());
+    return _db.insert(toJson());
   }
 
   @override
   Future update() async {}
 
   @override
-  Future detete() async {}
+  Future delete() async {}
 
   @override
-  Map<String, dynamic> asMap() {
-    var map = <String, dynamic>{};
+  EntityBase fromJson(Map<String, dynamic> json) {
+    return Config(
+        id: json["id"] as int,
+        versionAndroid: json["version_android"] as String,
+        versionNumberAndroid: json["version_number_android"] as int,
+        versionIos: json["version_ios"] as String,
+        versionNumberIos: json["version_number_ios"] as int,
+        requiredVersionAndroid: json["required_version_android"] as int,
+        requiredVersionIos: json["required_version_ios"] as int,
+        storeAndroid: json["store_android"] as String,
+        storeIos: json["store_ios"] as String,
+        enableAds: json['enable_ads'] as int);
+  }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
     map["id"] = id;
     map["version_android"] = versionAndroid;
     map["version_number_android"] = versionNumberAndroid;
@@ -61,19 +82,5 @@ class Config extends EntityBase {
     map["store_ios"] = storeIos;
     map['enable_ads'] = enableAds;
     return map;
-  }
-
-  @override
-  void readFromMap(Map<String, dynamic> json) {
-    id = json["id"] as int;
-    versionAndroid = json["version_android"] as String;
-    versionNumberAndroid = json["version_number_android"] as int;
-    versionIos = json["version_ios"] as String;
-    versionNumberIos = json["version_number_ios"] as int;
-    requiredVersionAndroid = json["required_version_android"] as int;
-    requiredVersionIos = json["required_version_ios"] as int;
-    storeAndroid = json["store_android"] as String;
-    storeIos = json["store_ios"] as String;
-    enableAds = json['enable_ads'] as int;
   }
 }

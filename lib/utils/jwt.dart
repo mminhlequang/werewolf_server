@@ -24,7 +24,7 @@ class AppJWT {
 
   static String generator(User user) {
     // Create a json web token
-    final jwt = JWT({'user': user?.asMap()});
+    final jwt = JWT({'user': user?.toJson()});
 
     // Sign it (default with HS256 algorithm)
     return jwt.sign(SecretKey(_secretKey),
@@ -39,7 +39,7 @@ class AppJWT {
       print('Payload: ${jwt.payload}');
       Map<String, dynamic> payload =
           jsonDecode(jsonEncode(jwt.payload)) as Map<String, dynamic>;
-      data.readFromMap(payload['user'] as Map<String, dynamic>);
+      data.fromJson(payload['user'] as Map<String, dynamic>);
       type = JWTType.success;
     } on JWTExpiredError {
       type = JWTType.expired;

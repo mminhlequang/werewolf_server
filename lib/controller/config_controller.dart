@@ -13,6 +13,6 @@ class ConfigController extends ResourceController {
       print("Error getConfig: $e");
     }
     final data = await AppDatabase.colConfig.findOne();
-    return Response.ok(ResponseConstant.reponseSuccess(data));
+    return Response.ok(ResponseConstant.responseSuccess(data));
   }
 }

@@ -16,7 +16,7 @@ export 'package:mime/mime.dart';
 export 'package:mongo_dart/mongo_dart.dart';
 
 export 'channel.dart';
-export 'constants/constans.dart';
+export 'constants/constants.dart';
 export 'controller/controller.dart';
 export 'entity/entity.dart';
 export 'extensions/extensions.dart';

@@ -13,6 +13,9 @@ class User extends EntityBase {
   String avatar;
   int score;
   int coin;
+  String languageCode;
+  bool isOnline;
+  String lastOnline;
 
   User(
       {this.username,
@@ -21,6 +24,9 @@ class User extends EntityBase {
       this.coin = 0,
       this.score = 0,
       this.fullName,
+      this.languageCode,
+      this.isOnline,
+      this.lastOnline,
       String password,
       int id})
       : super(id: id) {
@@ -73,6 +79,9 @@ class User extends EntityBase {
       password: json['password'] as String,
       score: json['score'] as int,
       coin: json['coin'] as int,
+      languageCode: json['languageCode'] as String,
+      isOnline: json['isOnline'] as bool,
+      lastOnline: json['lastOnline'] as String,
     );
   }
 
@@ -90,7 +99,10 @@ class User extends EntityBase {
       "username": username,
       "password": password,
       "score": score,
-      "coin": coin
+      "coin": coin,
+      "lastOnline": lastOnline,
+      "isOnline": isOnline,
+      "languageCode": languageCode
     };
   }
 }

@@ -1,6 +1,6 @@
 import 'package:werewolf_server/werewolf_server.dart';
 
-import 'constans.dart';
+import 'constants.dart';
 
 class ResponseConstant {
   static Map<String, dynamic> responseNotFound({String code}) => {

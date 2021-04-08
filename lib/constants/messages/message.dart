@@ -10,10 +10,19 @@ class AppMessages {
     "en": enMessages
   };
 
-  static String getMessage(String key, {String code}) {
+  static String getMessage(String key, {String code, List<String> values}) {
     code ??= languageCodeSupportDefault;
+    values ??= [];
     if (key == null || key.isEmpty || !_messages[code].containsKey(key))
       return "Key is null!";
-    return _messages[code][key];
+    String msg = _messages[code][key];
+    if (!msg.contains('\$')) {
+      return msg;
+    }
+    final List<String> messages = msg.split('\$');
+    msg = '';
+    messages.forEach((e) => msg +=
+        '$e${'${messages.indexOf(e) < values.length ? values[messages.indexOf(e)] : ''}'}');
+    return msg;
   }
 }

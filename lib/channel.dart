@@ -5,7 +5,7 @@ class WerewolfServerChannel extends ApplicationChannel {
   @override
   Future prepare() async {
     config = WereWolfConfiguration(options.configurationFilePath);
-    AppJWT.init(secretKey: config.secretKey, expiredsInDay: 30);
+    AppJWT.init(secretKey: config.secretKey, expiredInDay: 30);
     await AppDatabase.init(
         username: config.username,
         password: config.password,
@@ -20,11 +20,6 @@ class WerewolfServerChannel extends ApplicationChannel {
     final router =
         Router(notFoundHandler: notFoundHandler, basePath: config.apiBaseURL);
 
-    router.route("/token/generator").linkFunction((request) async {
-      return Response.ok(ResponseConstant.responseSuccess(
-          AppJWT.generator(User(fullName: "Minh Minh"))));
-    });
-
     router.route("/token/verify").linkFunction((request) async {
       final accessToken = request.raw.headers.value("Authorization");
       return Response.ok(ResponseConstant.responseSuccess(
@@ -33,11 +28,13 @@ class WerewolfServerChannel extends ApplicationChannel {
 
     router.route("/migrate").link(() => MigrateController());
 
-    router.route("/getConfig").link(() => ConfigController());
+    router.route("/get/config").link(() => ConfigController());
 
     router.route("/post/signUp").link(() => SignUpController());
 
     router.route("/post/signIn").link(() => SignInController());
+
+    router.route("/get/profile").link(() => MiddlewareController()).link(() => ProfileController());
 
     return router;
   }

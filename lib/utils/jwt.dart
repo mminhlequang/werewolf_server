@@ -15,9 +15,9 @@ class AppJWT {
   static String _secretKey;
   static int _expiredsInDay;
 
-  static void init({String secretKey, int expiredsInDay}) {
+  static void init({String secretKey, int expiredInDay}) {
     _secretKey = secretKey;
-    _expiredsInDay = expiredsInDay;
+    _expiredsInDay = expiredInDay;
   }
 
   static bool isValid(String accessToken) =>

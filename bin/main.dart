@@ -4,8 +4,8 @@ import 'package:werewolf_server/socket/socket_manager.dart';
 import 'package:werewolf_server/werewolf_server.dart';
 
 Future main() async {
-  WereWolfConfiguration config = WereWolfConfiguration('config.yaml');
-  AppJWT.init(secretKey: config.secretKey, expiredsInDay: 30);
+  final WereWolfConfiguration config = WereWolfConfiguration('config.yaml');
+  AppJWT.init(secretKey: config.secretKey, expiredInDay: 30);
   final app = Application<WerewolfServerChannel>()
     ..options.configurationFilePath = "config.yaml"
     ..options.port = config.portWebservice;

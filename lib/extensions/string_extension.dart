@@ -5,7 +5,7 @@ extension EmailValidator on String {
         .hasMatch(this);
   }
 
-  ///Minimum 1 Upper case
+  //Minimum 1 Upper case
   // Minimum 1 lowercase
   // Minimum 1 Numeric Number
   // Minimum 1 Special Character

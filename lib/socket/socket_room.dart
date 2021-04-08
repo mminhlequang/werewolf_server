@@ -1,7 +1,12 @@
 import 'package:socket_io/socket_io.dart';
 import 'package:werewolf_server/constants/constants.dart';
 import 'package:werewolf_server/entity/entity.dart';
+import 'package:werewolf_server/socket/socket_manager.dart';
+import 'package:werewolf_server/socket/socket_room_interface.dart';
 import 'package:werewolf_server/utils/converter.dart';
+import '../extensions/extensions.dart';
+
+import 'socket_constant.dart';
 
 enum SocketUserState { ready, prepare }
 
@@ -9,9 +14,12 @@ enum SocketRoomType { normal, rank }
 
 enum SocketRoomState { wait, ready, playing, done }
 
-class SocketRoom {
+class SocketRoom extends SocketRoomInterface {
   static const int maxMember = 16;
   static const int minMember = 1;
+  static const int beforeStart = 15;
+
+  final SocketManager _manager = SocketManager();
 
   SocketRoomType type;
   SocketRoomState state;
@@ -38,5 +46,45 @@ class SocketRoom {
       "members": members.map((e) => (e.data['user'] as User).toJson()).toList(),
       "languageCode": languageCode
     };
+  }
+
+  @override
+  void join(Socket socket) {
+    socket.join(id);
+    socket.emit(SocketConstant.emitInfoRoom, toJson());
+    _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
+      'msg': AppMessages.getMessage('room_welcome',
+          values: [socket.getUser()?.fullName])
+    });
+  }
+
+  @override
+  void leave(Socket socket) {
+    _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
+      'msg': AppMessages.getMessage('room_leave',
+          values: [socket.getUser()?.fullName])
+    });
+    socket.leave(id, (x) => print('Leave room callback: $x'));
+  }
+
+  @override
+  void ready(Socket socket) {
+    _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
+      'msg': AppMessages.getMessage('room_user_ready',
+          values: [socket.getUser()?.fullName])
+    });
+    socket.data.addEntries([const MapEntry('state', SocketUserState.ready)]);
+    if (countMember >= SocketRoom.minMember) {
+      _manager.removeRoom(this);
+      state = SocketRoomState.ready;
+      _manager.addRoom(this);
+      _manager.io.to(id).emit(SocketConstant.emitReadyRoom, {
+        'msg': AppMessages.getMessage('room_ready', values: ['$beforeStart'])
+      });
+      Future.delayed(const Duration(seconds: beforeStart), () {
+        _manager.io.to(id).emit(SocketConstant.emitRolePlayer,
+            {'msg': 'Vai trò của bạn là Dân làng!'});
+      });
+    }
   }
 }

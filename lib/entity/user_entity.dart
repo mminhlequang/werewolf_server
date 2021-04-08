@@ -86,8 +86,7 @@ class User extends EntityBase {
   }
 
   @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
+  List<Object> get props => [id, email];
 
   @override
   Map<String, dynamic> toJson() {

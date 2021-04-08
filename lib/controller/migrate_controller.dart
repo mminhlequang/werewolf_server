@@ -16,10 +16,10 @@ class MigrateController extends ResourceController {
       final languages = await AppDatabase.colLanguage.find().toList();
       final sectarians = await AppDatabase.colSectarian.find().toList();
       final rolesClassic = await AppDatabase.colRole
-          .find(where.eq('type', describeEnum(RoleType.classic)))
+          .find(where.eq('type', AppConverter.enumToString(RoleType.classic)))
           .toList();
       final rolesModern = await AppDatabase.colRole
-          .find(where.eq('type', describeEnum(RoleType.modern)))
+          .find(where.eq('type', AppConverter.enumToString(RoleType.modern)))
           .toList();
       return Response.ok(ResponseConstant.responseSuccess({
         "languages": languages,

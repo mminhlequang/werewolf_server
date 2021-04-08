@@ -63,7 +63,8 @@ class Role extends EntityBase {
         actionIcon: json['actionIcon'] as String,
         languageId: json['languageId'] as int,
         sectarians: json['sectarians'] as List<int>,
-        type: stringToEnum<RoleType>(json['type'] as String, RoleType.values));
+        type: AppConverter.stringToEnum<RoleType>(
+            json['type'] as String, RoleType.values));
   }
 
   @override
@@ -81,7 +82,7 @@ class Role extends EntityBase {
       "actionIcon": actionIcon,
       "languageId": languageId,
       "sectarians": sectarians,
-      "type": describeEnum(type)
+      "type": AppConverter.enumToString(type)
     };
   }
 }

@@ -35,8 +35,8 @@ class AppJWT {
     JWTType type;
     User data = User();
     try {
-      final jwt = JWT.verify(token.trim(), SecretKey(_secretKey));
-      print('Payload: ${jwt.payload}');
+      final jwt = JWT.verify(token ?? '', SecretKey(_secretKey));
+      print('Payload verify: ${jwt.payload}');
       final Map<String, dynamic> payload =
           jsonDecode(jsonEncode(jwt.payload)) as Map<String, dynamic>;
       if (payload == null || payload['user'] == null)

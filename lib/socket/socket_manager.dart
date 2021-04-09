@@ -40,6 +40,8 @@ class SocketManager extends SocketManagerInterface {
     _allRooms.add(room);
     if (room.state == SocketRoomState.wait && !_waitRooms.contains(room))
       _waitRooms.add(room);
+    if (room.state == SocketRoomState.ready && !_readyRooms.contains(room))
+      _readyRooms.add(room);
     else if (room.state == SocketRoomState.playing &&
         !_playingRooms.contains(room))
       _playingRooms.add(room);
@@ -50,8 +52,17 @@ class SocketManager extends SocketManagerInterface {
   void removeRoom(SocketRoom room) {
     if (_allRooms.contains(room)) _allRooms.remove(room);
     if (_waitRooms.contains(room)) _waitRooms.remove(room);
+    if (_readyRooms.contains(room)) _readyRooms.remove(room);
     if (_playingRooms.contains(room)) _playingRooms.remove(room);
     if (_doneRooms.contains(room)) _doneRooms.remove(room);
+  }
+
+  void clientDisconnect(Socket socket) {
+    final user = socket.getUser();
+    if (user != null) {
+      final room = _getRoomByUserId(user.id);
+      if (room != null) room.leave(socket);
+    }
   }
 
   @override
@@ -82,10 +93,8 @@ class SocketManager extends SocketManagerInterface {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
     final user = socket.getUser();
     final room = _getRoomByUserId(user?.id);
-    if (room != null) {
+    if (room != null)
       room.leave(socket);
-      removeRoom(room);
-    }
     log();
   }
 
@@ -94,7 +103,8 @@ class SocketManager extends SocketManagerInterface {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
     final user = socket.getUser();
     final room = _getRoomByUserId(user.id);
-    if (room != null) room.ready(socket);
+    if (room != null)
+      room.ready(socket);
     log();
   }
 

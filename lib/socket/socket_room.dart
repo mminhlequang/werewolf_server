@@ -16,7 +16,7 @@ enum SocketRoomState { wait, ready, playing, done }
 
 class SocketRoom extends SocketRoomInterface {
   static const int maxMember = 16;
-  static const int minMember = 1;
+  static const int minMember = 12;
   static const int beforeStart = 15;
 
   final SocketManager _manager = SocketManager();
@@ -50,6 +50,8 @@ class SocketRoom extends SocketRoomInterface {
 
   @override
   void join(Socket socket) {
+    if (!members.contains(socket))
+      members.add(socket);
     socket.join(id);
     socket.emit(SocketConstant.emitInfoRoom, toJson());
     _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
@@ -60,15 +62,23 @@ class SocketRoom extends SocketRoomInterface {
 
   @override
   void leave(Socket socket) {
-    _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
-      'msg': AppMessages.getMessage('room_leave',
-          values: [socket.getUser()?.fullName])
-    });
-    socket.leave(id, (x) => print('Leave room callback: $x'));
+    print('Leave room callback: :))');
+    if (members.contains(socket)) {
+      members.remove(socket);
+      if (countMember == 0)
+        _manager.removeRoom(this);
+      _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
+        'msg': AppMessages.getMessage('room_leave',
+            values: [socket.getUser()?.fullName])
+      });
+      socket.leave(id, (x) => print('Leave room callback: $x'));
+    }
   }
 
   @override
   void ready(Socket socket) {
+    if (!members.contains(socket))
+      return;
     _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
       'msg': AppMessages.getMessage('room_user_ready',
           values: [socket.getUser()?.fullName])

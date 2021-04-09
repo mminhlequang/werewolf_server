@@ -15,17 +15,17 @@ Future main() async {
   await app.start();
 
   print("Application started on port: ${config.portWebservice}.");
-  print("Use Ctrl-C (SIGINT) to stop running the application.");
 
   // Dart server
   final io = Server();
-  SocketManager().init(io);
+  final SocketManager manager = SocketManager()..init(io);
 
   io.on('connection', (client) {
     print('Connection: ${client.id}');
 
     client.on('disconnect', (_data) {
       print('Disconnect: ${client.id}');
+      manager.clientDisconnect(client as Socket);
     });
 
     _verifyToken(client as Socket);

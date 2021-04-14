@@ -68,8 +68,16 @@ class User extends EntityBase {
     return _db.remove(where.eq('id', id));
   }
 
-  @override
-  EntityBase fromJson(Map<String, dynamic> json) {
+  static List<User> listFromJson(dynamic json) {
+    List<User> data = [];
+    if (!(json is List) || json == null) return data;
+    json.forEach((e) {
+      data.add(User.fromJson(e));
+    });
+    return data;
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as int,
       fullName: json['fullName'] as String,
@@ -88,7 +96,6 @@ class User extends EntityBase {
   @override
   List<Object> get props => [id, email];
 
-  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,

@@ -41,8 +41,16 @@ class Sectarian extends EntityBase {
     return _db.remove(where.eq('id', id));
   }
 
-  @override
-  EntityBase fromJson(Map<String, dynamic> json) {
+  static List<Sectarian> listFromJson(dynamic json) {
+    List<Sectarian> data = [];
+    if (!(json is List) || json == null) return data;
+    json.forEach((e) {
+      data.add(Sectarian.fromJson(e));
+    });
+    return data;
+  }
+
+  factory Sectarian.fromJson(Map<String, dynamic> json) {
     return Sectarian(
         id: json['id'] as int,
         name: json['name'] as String,
@@ -52,10 +60,8 @@ class Sectarian extends EntityBase {
   }
 
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 
-  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,

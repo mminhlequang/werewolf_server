@@ -52,8 +52,16 @@ class Role extends EntityBase {
     return _db.remove(where.eq('id', id));
   }
 
-  @override
-  EntityBase fromJson(Map<String, dynamic> json) {
+  static List<Role> listFromJson(dynamic json) {
+    List<Role> data = [];
+    if (!(json is List) || json == null) return data;
+    json.forEach((e) {
+      data.add(Role.fromJson(e));
+    });
+    return data;
+  }
+
+  factory Role.fromJson(Map<String, dynamic> json) {
     return Role(
         id: json['id'] as int,
         name: json['name'] as String,
@@ -68,10 +76,8 @@ class Role extends EntityBase {
   }
 
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 
-  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,

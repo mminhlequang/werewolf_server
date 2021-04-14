@@ -41,7 +41,7 @@ class AppJWT {
           jsonDecode(jsonEncode(jwt.payload)) as Map<String, dynamic>;
       if (payload == null || payload['user'] == null)
         throw JWTError('Payload info can\'t by null!');
-      data = data.fromJson(payload['user'] as Map<String, dynamic>) as User;
+      data = User.fromJson(payload['user']);
       type = JWTType.success;
     } on JWTExpiredError {
       type = JWTType.expired;

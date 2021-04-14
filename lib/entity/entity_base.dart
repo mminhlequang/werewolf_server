@@ -18,8 +18,4 @@ abstract class EntityBase extends Equatable {
   Future update();
 
   Future delete();
-
-  EntityBase fromJson(Map<String, dynamic> json);
-
-  Map<String, dynamic> toJson();
 }

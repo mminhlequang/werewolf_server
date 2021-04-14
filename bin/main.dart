@@ -38,10 +38,9 @@ Future main() async {
 Future _verifyToken(Socket client) async {
   final String accessToken = client.handshake['query']['accessToken'] as String;
   final JWTResponse response = AppJWT.verify(accessToken);
-  if (!response.isSuccess)
+  if (response.isSuccess) {
+    client.user = response.data;
+    SocketController(client);
+  } else
     client.disconnect();
-  else
-    client.data = {"user": response.data};
-  //Init socket controll
-  SocketController(client);
 }

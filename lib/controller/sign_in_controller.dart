@@ -28,7 +28,7 @@ class SignInController extends Controller {
                   .and(where.eq("password", hash)))
               .or(where.eq("email", username).and(where.eq("password", hash))));
 
-          final accessToken = AppJWT.generator(User().fromJson(user) as User);
+          final accessToken = AppJWT.generator(User.fromJson(user));
           if (user != null)
             response = ResponseConstant.responseSuccess(
                 {"user": user, "accessToken": accessToken});

@@ -49,8 +49,16 @@ class Config extends EntityBase {
   @override
   Future delete() async {}
 
-  @override
-  EntityBase fromJson(Map<String, dynamic> json) {
+  static List<Config> listFromJson(dynamic json) {
+    List<Config> data = [];
+    if (!(json is List) || json == null) return data;
+    json.forEach((e) {
+      data.add(Config.fromJson(e));
+    });
+    return data;
+  }
+
+  factory Config.fromJson(Map<String, dynamic> json) {
     return Config(
         id: json["id"] as int,
         versionAndroid: json["version_android"] as String,
@@ -65,10 +73,8 @@ class Config extends EntityBase {
   }
 
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 
-  @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map["id"] = id;

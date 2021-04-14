@@ -35,20 +35,26 @@ class Language extends EntityBase {
     return _db.remove(where.eq('id', id));
   }
 
-  @override
-  EntityBase fromJson(Map<String, dynamic> json) {
+  static List<Language> listFromJson(dynamic json) {
+    List<Language> data = [];
+    if (!(json is List) || json == null) return data;
+    json.forEach((e) {
+      data.add(Language.fromJson(e));
+    });
+    return data;
+  }
+
+  factory Language.fromJson(Map<String, dynamic> json) {
     return Language(
         id: json['id'] as int,
         name: json['name'] as String,
         code: json['code'] as String);
   }
 
-  @override
   Map<String, dynamic> toJson() {
     return {"id": id, "name": name, "code": code};
   }
 
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }

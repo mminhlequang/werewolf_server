@@ -58,7 +58,7 @@ class SocketManager extends SocketManagerInterface {
   }
 
   void clientDisconnect(Socket socket) {
-    final user = socket.getUser();
+    final user = socket.user;
     if (user != null) {
       final room = _getRoomByUserId(user.id);
       if (room != null) room.leave(socket);
@@ -68,7 +68,7 @@ class SocketManager extends SocketManagerInterface {
   @override
   void playerFindRoom(Socket socket, dynamic _data) {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
-    final User user = socket.getUser();
+    final User user = socket.user;
     final String type = data['type'] as String;
     SocketRoom room = _readyRooms.firstWhere((_room) {
       return _room.languageCode == user.languageCode &&
@@ -91,7 +91,7 @@ class SocketManager extends SocketManagerInterface {
   @override
   void playerLeaveRoom(Socket socket, dynamic _data) {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
-    final user = socket.getUser();
+    final user = socket.user;
     final room = _getRoomByUserId(user?.id);
     if (room != null)
       room.leave(socket);
@@ -101,7 +101,7 @@ class SocketManager extends SocketManagerInterface {
   @override
   void playerReady(Socket socket, dynamic _data) {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
-    final user = socket.getUser();
+    final user = socket.user;
     final room = _getRoomByUserId(user.id);
     if (room != null)
       room.ready(socket);

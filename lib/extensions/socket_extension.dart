@@ -9,23 +9,15 @@ extension DataSocket on Socket {
 
   Role get role => data['role'] as Role;
 
-  void ready() {
-    data.addEntries([const MapEntry('state', SocketUserState.ready)]);
+  set state(SocketUserState state) {
+    data.addEntries([MapEntry('state', state)]);
   }
 
-  SocketUserState getState() {
-    if (data == null || data.isEmpty || data['state'] == null)
-      return SocketUserState.prepare;
-    return data['state'] as SocketUserState;
-  }
+  SocketUserState get state => data['state'] as SocketUserState;
 
   set user(User user) {
     data.addEntries([MapEntry('user', user)]);
   }
 
   User get user => data['user'] as User;
-
-  void addEntryData(MapEntry entry) {
-    data.addEntries([entry]);
-  }
 }

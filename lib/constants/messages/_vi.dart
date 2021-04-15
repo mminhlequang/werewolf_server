@@ -6,5 +6,15 @@ Map<String, String> viMessages = {
   "room_welcome": "Chào mừng \$ tham gia phòng!",
   "room_user_ready": "\$ đã sẵn sàng!",
   "room_ready": 'Phòng đã đã sẵn sàng!\nVán ma sói sẽ bắt đầu sau \$s!',
-  "room_leave": "\$ đã rời phòng!"
+  "room_user_role": "Vai trò của bạn là \$!\n\$",
+  "room_start_play" : "Trò chơi đã bắt đầu!",
+  "room_leave": "\$ đã rời phòng!",
+  "start_morning" : "[Day:\$] Ngày mới đã bắt đầu...",
+  "start_evening" : "[Day:\$] Màn đêm buông xuống...",
+  "villager_vote" : "[Day:\$] Chúng ta sẽ chọn một người để treo cổ ngày hôm nay...",
+  "villager_vote_someone" : "[Day:\$] Dân làng đã treo cổ \$",
+  "villager_vote_not_someone" : "[Day:\$] Dân làng không thể chọn ai để treo cổ.",
+  "wolf_vote" : "[Day:\$] Chúng ta sẽ chọn ai đói để cắn đêm nay...",
+  "wolf_vote_someone" : "[Day:\$] Sói đã cắn chết \$. Một đêm buồn...",
+  "wolf_vote_not_someone" : "[Day:\$] Một đêm yên tĩnh với dân làng",
 };

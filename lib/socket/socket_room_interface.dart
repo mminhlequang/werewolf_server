@@ -6,4 +6,8 @@ abstract class SocketRoomInterface {
   void ready(Socket socket);
 
   void leave(Socket socket);
+
+  void roomPlay();
+
+  void timeControlStart();
 }

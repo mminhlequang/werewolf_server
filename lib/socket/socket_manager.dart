@@ -1,6 +1,5 @@
 import 'package:socket_io/socket_io.dart';
 import 'package:werewolf_server/entity/entity.dart';
-import 'package:werewolf_server/socket/socket_constant.dart';
 import 'package:werewolf_server/werewolf_server.dart';
 
 import 'socket_manager_interface.dart';
@@ -65,6 +64,14 @@ class SocketManager extends SocketManagerInterface {
     }
   }
 
+  void log() {
+    print('All rooms: ${_allRooms.length}');
+    print('Wait rooms: ${_waitRooms.length}');
+    print('Ready rooms: ${_readyRooms.length}');
+    print('Playing rooms: ${_playingRooms.length}');
+    print('Done rooms: ${_doneRooms.length}');
+  }
+
   @override
   void playerFindRoom(Socket socket, dynamic _data) {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
@@ -93,8 +100,7 @@ class SocketManager extends SocketManagerInterface {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
     final user = socket.user;
     final room = _getRoomByUserId(user?.id);
-    if (room != null)
-      room.leave(socket);
+    if (room != null) room.leave(socket);
     log();
   }
 
@@ -103,16 +109,17 @@ class SocketManager extends SocketManagerInterface {
     final Map<String, dynamic> data = AppConverter.parseToMap(_data);
     final user = socket.user;
     final room = _getRoomByUserId(user.id);
-    if (room != null)
-      room.ready(socket);
+    if (room != null) room.ready(socket);
     log();
   }
 
-  void log() {
-    print('All rooms: ${_allRooms.length}');
-    print('Wait rooms: ${_waitRooms.length}');
-    print('Ready rooms: ${_readyRooms.length}');
-    print('Playing rooms: ${_playingRooms.length}');
-    print('Done rooms: ${_doneRooms.length}');
+  @override
+  void playerChat(Socket socket, _data, SocketManagerChatChannel channel) {
+    // TODO: implement playerChat
+  }
+
+  @override
+  void playerVote(Socket socket, _data, SocketManagerVoteChannel channel) {
+    // TODO: implement playerVote
   }
 }

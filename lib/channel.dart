@@ -36,6 +36,8 @@ class WerewolfServerChannel extends ApplicationChannel {
 
     router.route("/get/profile").link(() => MiddlewareController()).link(() => ProfileController());
 
+    router.route("/get/roles").link(() => RolesController());
+
     return router;
   }
 

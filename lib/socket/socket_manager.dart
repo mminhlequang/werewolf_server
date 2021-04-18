@@ -65,11 +65,8 @@ class SocketManager extends SocketManagerInterface {
   }
 
   void log() {
-    print('All rooms: ${_allRooms.length}');
-    print('Wait rooms: ${_waitRooms.length}');
-    print('Ready rooms: ${_readyRooms.length}');
-    print('Playing rooms: ${_playingRooms.length}');
-    print('Done rooms: ${_doneRooms.length}');
+    print(
+        'Room log: All(${_allRooms.length}) - Wait(${_waitRooms.length}) - Ready(${_readyRooms.length}) - Done(${_doneRooms.length})');
   }
 
   @override
@@ -115,7 +112,23 @@ class SocketManager extends SocketManagerInterface {
 
   @override
   void playerChat(Socket socket, _data, SocketManagerChatChannel channel) {
-    // TODO: implement playerChat
+    final Map<String, dynamic> data = AppConverter.parseToMap(_data);
+    final user = socket.user;
+    final room = _getRoomByUserId(user?.id);
+    switch (channel) {
+      case SocketManagerChatChannel.villager:
+        room.sendMessageRoom('[12] ${user.fullName}: ${data['msg']}',
+            translation: false);
+        break;
+      case SocketManagerChatChannel.wolf:
+        room.sendMessageWolfChanel('[12] ${user.fullName}: ${data['msg']}',
+            translation: false);
+        break;
+      case SocketManagerChatChannel.die:
+        room.sendMessageDieChanel('[12] ${user.fullName}: ${data['msg']}',
+            translation: false);
+        break;
+    }
   }
 
   @override

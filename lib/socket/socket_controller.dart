@@ -55,7 +55,7 @@ class SocketController extends SocketControllerInterface {
 
   @override
   void villagerChat() {
-    _socket.on(SocketConstant.onReadyPlayer, (data) {
+    _socket.on(SocketConstant.onVillagerChat, (data) {
       print("Socket listen villagerChat: $data");
       _manager.playerChat(_socket, data, SocketManagerChatChannel.villager);
     });
@@ -63,7 +63,7 @@ class SocketController extends SocketControllerInterface {
 
   @override
   void wolfChat() {
-    _socket.on(SocketConstant.onReadyPlayer, (data) {
+    _socket.on(SocketConstant.onWolfChat, (data) {
       print("Socket listen wolfChat: $data");
       _manager.playerChat(_socket, data, SocketManagerChatChannel.wolf);
     });
@@ -71,7 +71,7 @@ class SocketController extends SocketControllerInterface {
 
   @override
   void villagerVote() {
-    _socket.on(SocketConstant.onReadyPlayer, (data) {
+    _socket.on(SocketConstant.onVillagerVote, (data) {
       print("Socket listen villagerVote: $data");
       _manager.playerVote(_socket, data, SocketManagerVoteChannel.villager);
     });
@@ -79,7 +79,7 @@ class SocketController extends SocketControllerInterface {
 
   @override
   void wolfVote() {
-    _socket.on(SocketConstant.onReadyPlayer, (data) {
+    _socket.on(SocketConstant.onWolfVote, (data) {
       print("Socket listen wolfVote: $data");
       _manager.playerVote(_socket, data, SocketManagerVoteChannel.wolf);
     });

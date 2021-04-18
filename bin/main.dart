@@ -7,8 +7,13 @@ Future main() async {
   final WereWolfConfiguration config = WereWolfConfiguration('config.yaml');
   AppJWT.init(secretKey: config.secretKey, expiredInDay: 30);
   final app = Application<WerewolfServerChannel>()
-    ..options.configurationFilePath = "config.yaml"
+    ..options.context = {'config': config}
     ..options.port = config.portWebservice;
+  await AppDatabase.init(
+      username: config.username,
+      password: config.password,
+      databaseName: config.databaseName,
+      host: config.host);
 
   // final count = Platform.numberOfProcessors ~/ 2;
   // await app.start(numberOfInstances: count > 0 ? count : 1);

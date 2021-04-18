@@ -76,9 +76,14 @@ class SocketRoom extends SocketRoomInterface {
   }
 
   void getRoles() async {
-    if (countMember < minMember) return;
-    final countVillager = (countMember / 2).floor();
-    final countOther = countMember <= 14 ? 2 : 3;
+    ///Test
+    roles = (await AppDatabase.colRole
+            .find(where.eq('languageId', 1).eq('sectarians', [2]).limit(1))
+            .toList())
+        .toRoles;
+    return;
+    final countVillager = (countMember / 2).floor() + 2;
+    final countOther = countMember <= 14 ? 1 : 2;
     final countWolf = countMember - countVillager - countOther;
     final villagers = (await AppDatabase.colRole
             .find(where
@@ -100,36 +105,39 @@ class SocketRoom extends SocketRoomInterface {
                 .eq('sectarians', [3]).limit(countOther))
             .toList())
         .toRoles;
-
     roles = villagers + wolfs + others;
   }
 
-  sendMessage(String msg, {List<String> values}) => _manager.io.to(id).emit(
-      SocketConstant.emitMessageRoom,
-      SocketEmitFormat.success(msg, values: values));
+  sendMessageSystem(Socket socket, String msg,
+          {List<String> values, bool translation = true}) =>
+      socket.emit(SocketConstant.emitMessageSystem, {
+        'msg': !translation ? msg : AppMessages.getMessage(msg, values: values)
+      });
 
-  sendMessageWolfChanel(String msg, {List<String> values}) =>
-      _manager.io.to(wolfChannel).emit(SocketConstant.emitMessageWolf,
-          SocketEmitFormat.success(msg, values: values));
+  sendMessageRoom(String msg, {List<String> values, bool translation = true}) =>
+      _manager.io.to(id).emit(SocketConstant.emitMessageRoom, {
+        'msg': !translation ? msg : AppMessages.getMessage(msg, values: values)
+      });
 
-  sendMessageDieChanel(String msg, {List<String> values}) =>
-      _manager.io.to(dieChannel).emit(SocketConstant.emitMessageDie,
-          SocketEmitFormat.success(msg, values: values));
+  sendMessageWolfChanel(String msg,
+          {List<String> values, bool translation = true}) =>
+      _manager.io.to(wolfChannel).emit(SocketConstant.emitMessageWolf, {
+        'msg': !translation ? msg : AppMessages.getMessage(msg, values: values)
+      });
+
+  sendMessageDieChanel(String msg,
+          {List<String> values, bool translation = true}) =>
+      _manager.io.to(dieChannel).emit(SocketConstant.emitMessageDie, {
+        'msg': !translation ? msg : AppMessages.getMessage(msg, values: values)
+      });
 
   @override
   void join(Socket socket) {
     if (!members.contains(socket)) members.add(socket);
-
-    ////Test
-    for (int i = 0; i < SocketRoom.minMember; i++) {
-      socket.state = SocketUserState.ready;
-      members.add(socket);
-    }
-    print('countMember: $countMember - allReady: $allReady');
-    /////
     socket.join(id);
     socket.emit(SocketConstant.emitInfoRoom, toJson());
-    sendMessage('room_welcome', values: [socket.user?.fullName]);
+    sendMessageRoom('room_welcome', values: [socket.user?.fullName]);
+    _manager.io.to(id).emit(SocketConstant.emitJoinRoom, toJson());
   }
 
   @override
@@ -137,7 +145,7 @@ class SocketRoom extends SocketRoomInterface {
     if (members.contains(socket)) {
       members.remove(socket);
       if (countMember == 0) _manager.removeRoom(this);
-      sendMessage('room_leave', values: [socket.user?.fullName]);
+      sendMessageRoom('room_leave', values: [socket.user?.fullName]);
       socket.leave(id, (x) => print('Leave room callback: $x'));
     }
   }
@@ -145,9 +153,11 @@ class SocketRoom extends SocketRoomInterface {
   @override
   void ready(Socket socket) async {
     if (!members.contains(socket)) return;
-    sendMessage('room_user_ready', values: [socket.user?.fullName]);
+    sendMessageRoom('room_user_ready', values: [socket.user?.fullName]);
     socket.state = SocketUserState.ready;
-    if (countMember >= SocketRoom.minMember && allReady) {
+    if (countMember >= SocketRoom.minMember &&
+        allReady &&
+        state == SocketRoomState.wait) {
       _manager.removeRoom(this);
       state = SocketRoomState.ready;
       _manager.addRoom(this);
@@ -155,8 +165,10 @@ class SocketRoom extends SocketRoomInterface {
       //Random role for all player
       await getRoles();
 
+      sendMessageRoom('room_ready', values: ['$beforeStart']);
       _manager.io.to(id).emit(SocketConstant.emitReadyRoom, {
-        'msg': AppMessages.getMessage('room_ready', values: ['$beforeStart'])
+        'before': beforeStart,
+        'roles': roles.map((e) => e.toJson()).toList()
       });
 
       //Send role to player
@@ -165,29 +177,54 @@ class SocketRoom extends SocketRoomInterface {
         _roles.shuffle();
         for (int i = 0; i < countMember; i++) {
           members[i].role = _roles[i];
-          members[i].emit(
-              SocketConstant.emitRolePlayer,
-              SocketEmitFormat.success('room_user_role',
-                  values: [_roles[i].name, _roles[i].description],
-                  data: _roles[i].toJson()));
+          sendMessageSystem(members[i], 'room_user_role',
+              values: [_roles[i].name, _roles[i].description]);
+          members[i].emit(SocketConstant.emitRolePlayer, _roles[i].toJson());
 
           //If player is wolf: Join to wolf channel
-          if(_roles[i].sectarians.contains(3))
-            members[i].join(wolfChannel);
-
-          if (i == countMember - 1) {
-            roomPlay();
-          }
+          if (_roles[i].sectarians.contains(2)) members[i].join(wolfChannel);
+          //Play room
+          if (i == countMember - 1) roomPlay();
         }
       });
     }
+
+    ///Test
+    _manager.removeRoom(this);
+    state = SocketRoomState.ready;
+    _manager.addRoom(this);
+
+    //Random role for all player
+    await getRoles();
+
+    sendMessageRoom('room_ready', values: ['$beforeStart']);
+    _manager.io.to(id).emit(SocketConstant.emitReadyRoom, {
+      'before': beforeStart,
+      'roles': roles.map((e) => e.toJson()).toList()
+    });
+
+    //Send role to player
+    Future.delayed(const Duration(seconds: beforeStart), () {
+      for (int i = 0; i < countMember; i++) {
+        members[i].role = roles[i];
+        sendMessageSystem(members[i], 'room_user_role',
+            values: [roles[i].name, roles[i].description]);
+        members[i].emit(SocketConstant.emitRolePlayer, roles[i].toJson());
+
+        //If player is wolf: Join to wolf channel
+        if (roles[i].sectarians.contains(2)) members[i].join(wolfChannel);
+        //Play room
+        if (i == countMember - 1) roomPlay();
+      }
+    });
   }
 
   @override
   void roomPlay() async {
+    if (state == SocketRoomState.playing) return;
     state = SocketRoomState.playing;
     await Future.delayed(Duration(seconds: 5));
-    sendMessage('room_start_play');
+    sendMessageRoom('room_start_play');
     _manager.io.to(id).emit(SocketConstant.emitPlayRoom);
     timeControlStart();
   }
@@ -198,58 +235,57 @@ class SocketRoom extends SocketRoomInterface {
     timeState = SocketRoomTimeState.morning;
     while (state != SocketRoomState.done) {
       //Morning
-      sendMessage('start_morning', values: ['$day']);
+      sendMessageRoom('start_morning', values: ['$day']);
       _manager.io.to(id).emit(SocketConstant.emitTimeControl,
-          SocketEmitFormat.success('start_morning', values: ['$day']));
+          SocketEmitFormat.success(msg: 'start_morning', values: ['$day']));
       await Future.delayed(Duration(seconds: timeDiscuss));
-      sendMessage('villager_vote', values: ['$day']);
+      sendMessageRoom('villager_vote', values: ['$day']);
       _manager.io.to(id).emit(
           SocketConstant.emitVillagerVoteStart,
-          SocketEmitFormat.success('villager_vote',
-              values: ['$day'], data: timeVillagerVote));
+          SocketEmitFormat.success(
+              msg: 'villager_vote', values: ['$day'], data: timeVillagerVote));
       await Future.delayed(Duration(seconds: timeVillagerVote));
 
       //Vote success?
       if (false) {
         var someone;
-        sendMessage('villager_vote_someone', values: ['$day', 'someone']);
+        sendMessageRoom('villager_vote_someone', values: ['$day', 'someone']);
         _manager.io.to(id).emit(
             SocketConstant.emitVillagerVoteEnd,
-            SocketEmitFormat.success('villager_vote_someone',
-                values: ['$day', '$someone']));
+            SocketEmitFormat.success(
+                msg: 'villager_vote_someone', values: ['$day', '$someone']));
       } else {
-        sendMessage('villager_vote_not_someone', values: ['$day']);
+        sendMessageRoom('villager_vote_not_someone', values: ['$day']);
         _manager.io.to(id).emit(
             SocketConstant.emitVillagerVoteEnd,
-            SocketEmitFormat.success('villager_vote_not_someone',
-                values: ['$day']));
+            SocketEmitFormat.success(
+                msg: 'villager_vote_not_someone', values: ['$day']));
       }
 
       //Evening
       timeState = SocketRoomTimeState.evening;
-      sendMessage('start_evening', values: ['$day']);
-      sendMessageWolfChanel('start_evening', values: ['$day']);
+      sendMessageRoom('start_evening', values: ['$day']);
       _manager.io.to(id).emit(SocketConstant.emitTimeControl,
-          SocketEmitFormat.success('start_evening', values: ['$day']));
-      _manager.io.to(id).emit(
+          SocketEmitFormat.success(msg: 'start_evening', values: ['$day']));
+      _manager.io.to(wolfChannel).emit(
           SocketConstant.emitWolfVoteStart,
-          SocketEmitFormat.success('wolf_vote',
-              values: ['$day'], data: timeVillagerVote));
+          SocketEmitFormat.success(
+              msg: 'wolf_vote', values: ['$day'], data: timeVillagerVote));
       await Future.delayed(Duration(seconds: timeWolfVote));
       //Vote success?
       if (false) {
         var someone;
-        sendMessage('wolf_vote_someone', values: ['$day', 'someone']);
-        _manager.io.to(id).emit(
+        sendMessageRoom('wolf_vote_someone', values: ['$day', 'someone']);
+        _manager.io.to(wolfChannel).emit(
             SocketConstant.emitWolfVoteEnd,
-            SocketEmitFormat.success('wolf_vote_someone',
-                values: ['$day', '$someone']));
+            SocketEmitFormat.success(
+                msg: 'wolf_vote_someone', values: ['$day', '$someone']));
       } else {
-        sendMessage('wolf_vote_not_someone', values: ['$day']);
-        _manager.io.to(id).emit(
+        sendMessageRoom('wolf_vote_not_someone', values: ['$day']);
+        _manager.io.to(wolfChannel).emit(
             SocketConstant.emitWolfVoteEnd,
-            SocketEmitFormat.success('wolf_vote_not_someone',
-                values: ['$day']));
+            SocketEmitFormat.success(
+                msg: 'wolf_vote_not_someone', values: ['$day']));
       }
 
       //New day

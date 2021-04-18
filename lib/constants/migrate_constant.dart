@@ -93,6 +93,12 @@ final List<Role> ROLES_CLASSIC = [
       sectarians: [2],
       type: RoleType.classic),
   Role(
+      name: "Ma Sói",
+      description: "Chọn một người để giết mỗi đêm.",
+      languageId: 1,
+      sectarians: [2],
+      type: RoleType.classic),
+  Role(
       name: "Sói Pháp Sư",
       description:
           "Trong ngày bạn có thể yểm người chơi khác. Đối với các Tiên Tri, Thầy Bói,... "

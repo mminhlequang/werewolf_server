@@ -14,7 +14,7 @@ Map<String, String> viMessages = {
   "villager_vote" : "[Day:\$] Chúng ta sẽ chọn một người để treo cổ ngày hôm nay...",
   "villager_vote_someone" : "[Day:\$] Dân làng đã treo cổ \$",
   "villager_vote_not_someone" : "[Day:\$] Dân làng không thể chọn ai để treo cổ.",
-  "wolf_vote" : "[Day:\$] Chúng ta sẽ chọn ai đói để cắn đêm nay...",
+  "wolf_vote" : "[Day:\$] Chúng ta sẽ chọn ai đó để cắn đêm nay...",
   "wolf_vote_someone" : "[Day:\$] Sói đã cắn chết \$. Một đêm buồn...",
   "wolf_vote_not_someone" : "[Day:\$] Một đêm yên tĩnh với dân làng",
 };

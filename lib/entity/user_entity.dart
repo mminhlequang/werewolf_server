@@ -79,17 +79,17 @@ class User extends EntityBase {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] as int,
-      fullName: json['fullName'] as String,
-      email: json['email'] as String,
-      avatar: json['avatar'] as String,
-      username: json['username'] as String,
-      password: json['password'] as String,
-      score: json['score'] as int,
-      coin: json['coin'] as int,
-      languageCode: json['languageCode'] as String,
-      isOnline: json['isOnline'] as bool,
-      lastOnline: json['lastOnline'] as String,
+      id: json['id'],
+      fullName: json['fullName'],
+      email: json['email'],
+      avatar: json['avatar'],
+      username: json['username'],
+      password: json['password'],
+      score: json['score'],
+      coin: json['coin'],
+      languageCode: json['languageCode'],
+      isOnline: json['isOnline'],
+      lastOnline: json['lastOnline'],
     );
   }
 

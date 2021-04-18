@@ -45,10 +45,7 @@ class Language extends EntityBase {
   }
 
   factory Language.fromJson(Map<String, dynamic> json) {
-    return Language(
-        id: json['id'] as int,
-        name: json['name'] as String,
-        code: json['code'] as String);
+    return Language(id: json['id'], name: json['name'], code: json['code']);
   }
 
   Map<String, dynamic> toJson() {

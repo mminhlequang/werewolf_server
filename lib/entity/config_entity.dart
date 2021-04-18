@@ -60,16 +60,16 @@ class Config extends EntityBase {
 
   factory Config.fromJson(Map<String, dynamic> json) {
     return Config(
-        id: json["id"] as int,
-        versionAndroid: json["version_android"] as String,
-        versionNumberAndroid: json["version_number_android"] as int,
-        versionIos: json["version_ios"] as String,
-        versionNumberIos: json["version_number_ios"] as int,
-        requiredVersionAndroid: json["required_version_android"] as int,
-        requiredVersionIos: json["required_version_ios"] as int,
-        storeAndroid: json["store_android"] as String,
-        storeIos: json["store_ios"] as String,
-        enableAds: json['enable_ads'] as int);
+        id: json["id"],
+        versionAndroid: json["version_android"],
+        versionNumberAndroid: json["version_number_android"],
+        versionIos: json["version_ios"],
+        versionNumberIos: json["version_number_ios"],
+        requiredVersionAndroid: json["required_version_android"],
+        requiredVersionIos: json["required_version_ios"],
+        storeAndroid: json["store_android"],
+        storeIos: json["store_ios"],
+        enableAds: json['enable_ads']);
   }
 
   @override

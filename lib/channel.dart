@@ -4,7 +4,7 @@ class WerewolfServerChannel extends ApplicationChannel {
   WereWolfConfiguration config;
   @override
   Future prepare() async {
-    config = WereWolfConfiguration(options.configurationFilePath);
+    config = options.context['config'];
     AppJWT.init(secretKey: config.secretKey, expiredInDay: 30);
     await AppDatabase.init(
         username: config.username,

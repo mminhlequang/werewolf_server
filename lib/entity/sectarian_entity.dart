@@ -52,11 +52,11 @@ class Sectarian extends EntityBase {
 
   factory Sectarian.fromJson(Map<String, dynamic> json) {
     return Sectarian(
-        id: json['id'] as int,
-        name: json['name'] as String,
-        description: json['description'] as String,
-        icon: json['icon'] as String,
-        languageId: json['languageId'] as int);
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        icon: json['icon'],
+        languageId: json['languageId']);
   }
 
   @override

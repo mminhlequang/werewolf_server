@@ -63,16 +63,16 @@ class Role extends EntityBase {
 
   factory Role.fromJson(Map<String, dynamic> json) {
     return Role(
-        id: json['id'] as int,
-        name: json['name'] as String,
-        description: json['description'] as String,
-        icon: json['icon'] as String,
-        smallIcon: json['smallIcon'] as String,
-        actionIcon: json['actionIcon'] as String,
-        languageId: json['languageId'] as int,
-        sectarians: json['sectarians'] as List<int>,
-        type: AppConverter.stringToEnum<RoleType>(
-            json['type'] as String, RoleType.values));
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        icon: json['icon'],
+        smallIcon: json['smallIcon'],
+        actionIcon: json['actionIcon'],
+        languageId: json['languageId'],
+        sectarians: (json['sectarians'] as List).map<int>((e) => e).toList(),
+        type:
+            AppConverter.stringToEnum<RoleType>(json['type'], RoleType.values));
   }
 
   @override

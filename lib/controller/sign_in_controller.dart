@@ -1,3 +1,4 @@
+import 'package:werewolf_server/http/repository.dart';
 import 'package:werewolf_server/werewolf_server.dart';
 
 class SignInController extends Controller {
@@ -40,6 +41,24 @@ class SignInController extends Controller {
           response = ResponseConstant.responseError();
         }
         return Response.ok(response);
+        break;
+      case "google":
+        if (!body.containsKey("id") || !body.containsKey("accessToken"))
+          return Response.ok(ResponseConstant.responseError(
+              msg: "Username, password is required!", translate: false));
+        final String accessToken = body["accessToken"][0];
+        final String id = body["id"][0];
+        AppRepository().verifyTokenGoogle(accessToken);
+        return Response.ok({});
+        break;
+      case "facebook":
+        if (!body.containsKey("id") || !body.containsKey("accessToken"))
+          return Response.ok(ResponseConstant.responseError(
+              msg: "Username, password is required!", translate: false));
+        final String accessToken = body["accessToken"][0];
+        final String id = body["id"][0];
+        AppRepository().verifyTokenGoogle(accessToken);
+        return Response.ok({});
         break;
       default:
         return Response.ok(ResponseConstant.responseError());

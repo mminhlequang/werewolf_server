@@ -1,3 +1,5 @@
+import 'package:werewolf_server/controller/media_upload_controller.dart';
+
 import 'werewolf_server.dart';
 
 class WerewolfServerChannel extends ApplicationChannel {
@@ -25,6 +27,10 @@ class WerewolfServerChannel extends ApplicationChannel {
       return Response.ok(ResponseConstant.responseSuccess(
           AppJWT.verify(accessToken).data?.toJson()));
     });
+
+    router.route("/files/*").link(() => FileController("public/"));
+
+    router.route("/upload").link(() => MediaUploadController());
 
     router.route("/migrate").link(() => MigrateController());
 
